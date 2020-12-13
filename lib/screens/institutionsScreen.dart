@@ -4,6 +4,10 @@ import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myButton.dart';
 import 'package:on_canteen/components/myRow.dart';
+import 'package:on_canteen/screens/askQuestionScreen.dart';
+import 'package:on_canteen/screens/schoolsScreen.dart';
+
+import 'QAScreen.dart';
 
 class InstitutionsScreen extends StatefulWidget {
   static const String id = 'institutions_screen';
@@ -76,7 +80,7 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
                               setState(() {
                                 cardDisabled = true;
                               });
-                              print('not disabled');
+                              Navigator.pushNamed(context, SchoolsScreen.id);
                               if (!mounted) return;
                               setState(() {
                                 cardDisabled = false;
@@ -96,108 +100,93 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
             ),
             Expanded(
               flex: 4,
-              child: Container(
-                child: Card(
-                  color: Color(0xff2A2F33),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MyRow(
-                        centralFlex: 9,
-                        centralWidget: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              radius: 30.h,
-                              backgroundImage: AssetImage('images/icon.png'),
+              child: Card(
+                color: Color(0xff2A2F33),
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 30.h,
+                        backgroundImage: AssetImage('images/icon.png'),
+                      ),
+                      title: Text(
+                        'Игорь Викторевич',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      subtitle: Text(
+                        'Диетолог',
+                        style: TextStyle(
+                            color: Color(0xff979797),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Divider(thickness: 2, height: 0),
+                    Row(children: [
+                      Expanded(child: Container()),
+                      Expanded(
+                        flex: 20,
+                        child: FlatButton(
+                            onPressed: !firstButtonDisabled
+                                ? () {
+                                    if (!mounted) return;
+                                    setState(() {
+                                      firstButtonDisabled = true;
+                                    });
+                                    Navigator.pushNamed(context, QAScreen.id);
+                                    if (!mounted) return;
+                                    setState(() {
+                                      firstButtonDisabled = false;
+                                    });
+                                  }
+                                : () {
+                                    print('Button is disabled');
+                                  },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(
+                                  color: Colors.white,
+                                  style: BorderStyle.solid),
                             ),
-                            SizedBox(width: 10.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Игорь Викторевич',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                SizedBox(height: 2.h),
-                                Text(
-                                  'Диетолог',
-                                  style: TextStyle(
-                                      color: Color(0xff979797),
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            )
-                          ],
+                            child: Text(
+                              'Вопросы - Ответы',
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            )),
+                      ),
+                      Expanded(child: Container()),
+                      Expanded(
+                        flex: 20,
+                        child: MyButton(
+                          title: 'Задать Вопрос',
+                          onPressed: () {
+                            if (!mounted) return;
+                            setState(() {
+                              secondButtonDisabled = true;
+                            });
+                            Navigator.pushNamed(context, AskQuestionScreen.id);
+                            if (!mounted) return;
+                            setState(() {
+                              secondButtonDisabled = false;
+                            });
+                          },
+                          isButtonDisabled: secondButtonDisabled,
                         ),
                       ),
-                      Divider(thickness: 2, height: 6),
-                      Row(children: [
-                        Expanded(child: Container()),
-                        Expanded(
-                          flex: 20,
-                          child: FlatButton(
-                              onPressed: !firstButtonDisabled
-                                  ? () {
-                                      if (!mounted) return;
-                                      setState(() {
-                                        firstButtonDisabled = true;
-                                      });
-                                      print('not disabled');
-                                      if (!mounted) return;
-                                      setState(() {
-                                        firstButtonDisabled = false;
-                                      });
-                                    }
-                                  : () {
-                                      print('Button is disabled');
-                                    },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                side: BorderSide(
-                                    color: Colors.white,
-                                    style: BorderStyle.solid),
-                              ),
-                              child: Text(
-                                'Вопросы - Ответы',
-                                style: TextStyle(
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                              )),
-                        ),
-                        Expanded(child: Container()),
-                        Expanded(
-                          flex: 20,
-                          child: MyButton(
-                            title: 'Задать Вопрос',
-                            onPressed: () {
-                              if (!mounted) return;
-                              setState(() {
-                                secondButtonDisabled = true;
-                              });
-                              print('not disabled');
-                              if (!mounted) return;
-                              setState(() {
-                                secondButtonDisabled = false;
-                              });
-                            },
-                            isButtonDisabled: secondButtonDisabled,
-                          ),
-                        ),
-                        Expanded(child: Container()),
-                      ]),
-                    ],
-                  ),
+                      Expanded(child: Container()),
+                    ]),
+                  ],
                 ),
               ),
             )

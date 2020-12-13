@@ -4,15 +4,16 @@ import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myRow.dart';
+import 'package:on_canteen/screens/foodsListScreen.dart';
 import 'package:on_canteen/screens/schoolWeekScreen.dart';
 
-class MenuScreen extends StatefulWidget {
-  static const String id = 'menu_screen';
+class MenuListScreen extends StatefulWidget {
+  static const String id = 'menuList_screen';
   @override
-  _MenuScreenState createState() => _MenuScreenState();
+  _MenuListScreenState createState() => _MenuListScreenState();
 }
 
-class _MenuScreenState extends State<MenuScreen> {
+class _MenuListScreenState extends State<MenuListScreen> {
   bool cardDisabled = false;
 
   @override
@@ -70,7 +71,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   CustomCard(
                     title: 'Меню 1',
                     onTap: () {
-                      Navigator.pushNamed(context, SchoolWeekScreen.id);
+                      Navigator.pushNamed(context, FoodsListScreen.id);
                       print('school');
                     },
                   ),

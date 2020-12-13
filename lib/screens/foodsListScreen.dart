@@ -5,6 +5,7 @@ import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/screens/schoolWeekScreen.dart';
+import 'package:on_canteen/screens/singleFoodScreen.dart';
 
 class FoodsListScreen extends StatefulWidget {
   static const String id = 'foodsList_screen';
@@ -48,7 +49,7 @@ class _FoodsListScreenState extends State<FoodsListScreen> {
         title: Padding(
           padding: EdgeInsets.only(top: 20.h),
           child: Text(
-            'Понедельник',
+            'Меню 1',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -68,48 +69,70 @@ class _FoodsListScreenState extends State<FoodsListScreen> {
               child: Wrap(
                 children: [
                   CustomCard(
-                    title: 'Меню 1',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      Navigator.pushNamed(context, SchoolWeekScreen.id);
-                      print('school');
+                      print('food');
+                      Navigator.pushNamed(context, SingleFoodScreen.id);
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Меню 2',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Завтрак',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Обед',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Школа №178',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Школа №178',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
                   CustomCard(
-                    title: 'Школа №178',
+                    title: 'Салат из авокадо',
                     onTap: () {
-                      print('school');
+                      print('food');
                     },
+                    isFood: true,
+                    foodSubtitle: '450 Ккал',
+                    price: '1000 тг',
                   ),
+                  SizedBox(height: 20.h, width: double.infinity),
                 ],
               ),
             ),
