@@ -18,13 +18,12 @@ class _SingleFoodScreenState extends State<SingleFoodScreen> {
       body: Stack(
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: ClipRRect(
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1517404215738-15263e9f9178?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-                    fit: BoxFit.fitHeight,
-                  ),
+                child: Image.network(
+                  'https://images.unsplash.com/photo-1517404215738-15263e9f9178?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+                  fit: BoxFit.fill,
                 ),
               ),
               Expanded(flex: 2, child: Container()),

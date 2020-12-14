@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/network/auth.dart';
 import 'package:on_canteen/screens/institutionsScreen.dart';
-// import 'package:plyushka/screens/user/forgotPasswordScreen.dart';
 import 'registration.dart';
-// import 'package:plyushka/screens/schoolsScreen.dart';
 import 'dart:convert';
 import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
@@ -56,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       } else if (outcome.statusCode == 200) {
         dynamic userInfo = jsonDecode(source);
-        nameInData = userInfo['data']['username'];
         tokenString = userInfo['access'];
         refreshTokenString = userInfo['refresh'];
         if (checkedValue) {

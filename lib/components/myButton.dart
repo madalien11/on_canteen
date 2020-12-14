@@ -21,13 +21,16 @@ class MyButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.0),
         ),
         color: Color(0xffFABF03),
-        child: Text(
-          title,
-          style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-              color: Color(0xff2A2F33),
-              letterSpacing: -0.3),
+        child: FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            title,
+            style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff2A2F33),
+                letterSpacing: -0.3),
+          ),
         ));
   }
 }

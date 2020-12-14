@@ -7,6 +7,8 @@ import 'package:on_canteen/screens/QAScreen.dart';
 import 'package:on_canteen/screens/askQuestionScreen.dart';
 import 'package:on_canteen/screens/auth/login.dart';
 import 'package:on_canteen/screens/auth/registration.dart';
+import 'package:on_canteen/screens/buffetItemScreen.dart';
+import 'package:on_canteen/screens/buffetScreen.dart';
 import 'package:on_canteen/screens/foodsListScreen.dart';
 import 'package:on_canteen/screens/institutionsScreen.dart';
 import 'package:on_canteen/screens/menuListScreen.dart';
@@ -16,10 +18,6 @@ import 'package:on_canteen/screens/singleFoodScreen.dart';
 import 'classes/authClasses.dart';
 import 'package:on_canteen/network/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'screens/user/newPassScreen.dart';
-// import 'screens/user/enterCodeScreen.dart';
-// import 'screens/user/forgotPasswordScreen.dart';
-// import 'screens/user/forgotPassCodeScreen.dart';
 
 LogOut signOut;
 AddTokenClass addTokenIns;
@@ -60,6 +58,8 @@ class MyApp extends StatelessWidget {
           SingleFoodScreen.id: (context) => SingleFoodScreen(),
           AskQuestionScreen.id: (context) => AskQuestionScreen(),
           QAScreen.id: (context) => QAScreen(),
+          BuffetScreen.id: (context) => BuffetScreen(),
+          BuffetItemScreen.id: (context) => BuffetItemScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.amber,
@@ -90,17 +90,13 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final _storage = FlutterSecureStorage();
   var tokenItems = [];
-  final _pageViewController = new PageController();
 
   delayer(context) async {
     try {
       for (var i in tokenItems) {
         if (i.tokenKey == 'token') {
-          for (var j in tokenItems) {
-            if (j.tokenKey == 'name') nameInData = j.tokenValue;
-          }
-          // Navigator.pushReplacementNamed(context, SchoolsScreen.id,
-          //     arguments: {'addToken': addNewItem, 'deleteAll': deleteAll});
+          Navigator.pushReplacementNamed(context, InstitutionsScreen.id,
+              arguments: {'addToken': addNewItem, 'deleteAll': deleteAll});
           return;
         }
       }
@@ -157,7 +153,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Timer(Duration(milliseconds: 2500), () {
       delayer(context);
     });
-//    _readLaunch();
   }
 
   @override
@@ -166,23 +161,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         designSize: Size(360, 706), allowFontScaling: false);
     return Scaffold(
       body: Container(
-        child: Stack(
-          children: <Widget>[
-            PageView.builder(
-              controller: _pageViewController,
-              itemCount: 1,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  color: Color(0xff22272B),
-                  padding: EdgeInsets.symmetric(horizontal: 85.w),
-                  child: Image.asset(
-                    "images/icon.png",
-                    fit: BoxFit.scaleDown,
-                  ),
-                );
-              },
-            ),
-          ],
+        height: double.infinity,
+        color: Color(0xff22272B),
+        padding: EdgeInsets.symmetric(horizontal: 85.w),
+        child: Image.asset(
+          "images/icon.png",
+          fit: BoxFit.scaleDown,
         ),
       ),
     );

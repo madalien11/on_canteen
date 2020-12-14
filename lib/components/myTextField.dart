@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyTextField extends StatelessWidget {
@@ -41,6 +42,11 @@ class MyTextField extends StatelessWidget {
             keyboardType:
                 myKeyboardType != null ? myKeyboardType : TextInputType.text,
             autofocus: false,
+            inputFormatters: myKeyboardType == TextInputType.phone
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'^([8])|([7])$')),
+                  ]
+                : <TextInputFormatter>[],
             obscureText: myObscureText,
             controller: myController,
             onChanged: onChanged,

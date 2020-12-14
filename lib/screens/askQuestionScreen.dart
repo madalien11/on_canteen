@@ -62,12 +62,15 @@ class _AskQuestionScreenState extends State<AskQuestionScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Вопрос Диетологу',
-                              style: TextStyle(
-                                  fontSize: 36.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                'Вопрос Диетологу',
+                                style: TextStyle(
+                                    fontSize: 36.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
                             ),
                             Text(
                               'Задайте свой вопрос, и получите ответ в течении 24 часов',

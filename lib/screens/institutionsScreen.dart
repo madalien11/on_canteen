@@ -157,12 +157,15 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
                                   color: Colors.white,
                                   style: BorderStyle.solid),
                             ),
-                            child: Text(
-                              'Вопросы - Ответы',
-                              style: TextStyle(
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                'Вопросы - Ответы',
+                                style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              ),
                             )),
                       ),
                       Expanded(child: Container()),

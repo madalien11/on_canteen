@@ -5,6 +5,7 @@ import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/weekDayCard.dart';
+import 'buffetScreen.dart';
 import 'menuListScreen.dart';
 
 class SchoolWeekScreen extends StatefulWidget {
@@ -67,34 +68,40 @@ class _SchoolWeekScreenState extends State<SchoolWeekScreen> {
               flex: 3,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Card(
-                  color: Color(0xff2A2F33),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          child: Image.network(
-                            'https://images.unsplash.com/photo-1517404215738-15263e9f9178?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-                            fit: BoxFit.fitWidth,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, BuffetScreen.id);
+                  },
+                  child: Card(
+                    color: Color(0xff2A2F33),
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            child: Image.network(
+                              'https://images.unsplash.com/photo-1517404215738-15263e9f9178?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(color: Color(0xff262626).withOpacity(0.46)),
-                      Center(
-                        child: Text(
-                          'Буфет',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 36.sp,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      )
-                    ],
+                        Container(color: Color(0xff262626).withOpacity(0.46)),
+                        Center(
+                          child: Text(
+                            'Буфет',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 36.sp,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

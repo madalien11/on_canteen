@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 String tokenString;
 String refreshTokenString;
-String nameInData;
 Function logOutInData = () => print('Log Out In Data');
 Function addTokenInData = () => print('Add Token In Data');
 String root = 'http://papi.trapezza.kz/api/';
