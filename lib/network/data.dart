@@ -1,12 +1,16 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:on_canteen/classes/BuffetItemTypes.dart';
+import 'package:on_canteen/classes/BuffetItems.dart';
+import 'package:on_canteen/classes/Institution.dart';
+import 'package:on_canteen/classes/dietolog.dart';
 
 String tokenString;
 String refreshTokenString;
 Function logOutInData = () => print('Log Out In Data');
 Function addTokenInData = () => print('Add Token In Data');
-String root = 'http://papi.trapezza.kz/api/';
+String root = 'http://api.contra.kz/';
 
 class Login {
   String phoneNum;
@@ -230,5 +234,140 @@ class ChangeProfile {
       String source = Utf8Decoder().convert(response.bodyBytes);
       return jsonDecode(source);
     }
+  }
+}
+
+Future<List<Institution>> fetchInstitutionTypes(BuildContext context) async {
+  final response = await http.get(root + 'api/organizationtypes/');
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List institutionsList = jsonData['data'];
+    List<Institution> institutions = [];
+    for (var institution in institutionsList) {
+      Institution s = Institution(
+        id: institution['id'],
+        name: institution['name'],
+      );
+      institutions.add(s);
+    }
+    return institutions;
+  } else {
+    throw Exception('institutionTypes ' + response.statusCode.toString());
+  }
+}
+
+Future<List<Institution>> fetchInstitutions(
+    BuildContext context, int id) async {
+  if (id == null) id = 2;
+  final response = await http.get(root + 'api/organizations/' + id.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List institutionsList = jsonData['data'];
+    List<Institution> institutions = [];
+    for (var institution in institutionsList) {
+      Institution s = Institution(
+        id: institution['id'],
+        name: institution['name'],
+        type: institution['type'],
+        regiona: institution['regiona'],
+      );
+      institutions.add(s);
+    }
+    return institutions;
+  } else {
+    throw Exception('institutions ' + response.statusCode.toString());
+  }
+}
+
+Future<List<BuffetItemTypes>> fetchBuffetItemTypes(
+    BuildContext context, int id) async {
+  if (id == null) id = 2;
+  final response = await http.get(root + 'api/getcatalog/' + id.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List buffetItemTypesList = jsonData['data'];
+    List<BuffetItemTypes> buffetItemTypes = [];
+    for (var buffetItemType in buffetItemTypesList) {
+      BuffetItemTypes s = BuffetItemTypes(
+        id: buffetItemType['id'],
+        name: buffetItemType['name'],
+      );
+      buffetItemTypes.add(s);
+    }
+    return buffetItemTypes;
+  } else {
+    throw Exception('buffetItemTypes ' + response.statusCode.toString());
+  }
+}
+
+Future<List<BuffetItems>> fetchBuffetItems(
+    BuildContext context, int institutionId, int buffetItemTypeId) async {
+  if (institutionId == null) institutionId = 2;
+  if (buffetItemTypeId == null) buffetItemTypeId = 2;
+  final response = await http.get(root +
+      'api/getproduct/' +
+      institutionId.toString() +
+      '/' +
+      buffetItemTypeId.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List buffetItemsList = jsonData['data'];
+    List<BuffetItems> buffetItems = [];
+    for (var buffetItem in buffetItemsList) {
+      BuffetItems s = BuffetItems(
+        id: buffetItem['id'],
+        name: buffetItem['name'],
+        description: buffetItem['description'],
+        img: buffetItem['img'],
+        categoryId: buffetItem['category']['id'],
+        categoryName: buffetItem['category']['name'],
+      );
+      buffetItems.add(s);
+    }
+    return buffetItems;
+  } else {
+    throw Exception('buffetItems ' + response.statusCode.toString());
+  }
+}
+
+Future<List<Dietolog>> fetchDietolog(BuildContext context) async {
+  final response = await http.get(root + 'api/dietolog/');
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List dietologList = jsonData['data'];
+    List<Dietolog> dietologs = [];
+    for (var dietolog in dietologList) {
+      Dietolog s = Dietolog(
+        id: dietolog['id'],
+        name: dietolog['name'],
+        surname: dietolog['surname'],
+        description: dietolog['description'],
+        img: dietolog['img'],
+      );
+      dietologs.add(s);
+    }
+    return dietologs;
+  } else {
+    throw Exception('dietolog ' + response.statusCode.toString());
   }
 }

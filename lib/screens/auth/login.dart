@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:on_canteen/network/auth.dart';
-import 'package:on_canteen/screens/institutionsScreen.dart';
+import 'package:on_canteen/network/data.dart';
+import 'package:on_canteen/screens/institutionTypesScreen.dart';
 import 'registration.dart';
 import 'dart:convert';
 import 'package:on_canteen/components/showAlertDialog.dart';
@@ -276,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               isButtonDisabled: _isButtonDisabled,
                               onPressed: () {
                                 Navigator.pushNamed(
-                                    context, InstitutionsScreen.id);
+                                    context, InstitutionTypesScreen.id);
                               },
                             ),
                           ),

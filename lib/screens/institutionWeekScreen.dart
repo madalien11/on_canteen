@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
-import 'package:on_canteen/components/customCard.dart';
-import 'package:on_canteen/components/institutionCard.dart';
-import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/weekDayCard.dart';
 import 'buffetScreen.dart';
 import 'menuListScreen.dart';
 
-class SchoolWeekScreen extends StatefulWidget {
-  static const String id = 'schoolWeek_screen';
+class InstitutionWeekScreen extends StatefulWidget {
+  static const String id = 'institutionWeek_screen';
   @override
-  _SchoolWeekScreenState createState() => _SchoolWeekScreenState();
+  _InstitutionWeekScreenState createState() => _InstitutionWeekScreenState();
 }
 
-class _SchoolWeekScreenState extends State<SchoolWeekScreen> {
+class _InstitutionWeekScreenState extends State<InstitutionWeekScreen> {
+  String pageName = '';
   bool cardDisabled = false;
 
   @override
@@ -33,6 +31,8 @@ class _SchoolWeekScreenState extends State<SchoolWeekScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(360, 706), allowFontScaling: false);
+    final Map map = ModalRoute.of(context).settings.arguments;
+    if (map != null && map['pageName'] != null) pageName = map['pageName'];
     return Scaffold(
       backgroundColor: Color(0xff22272B),
       appBar: AppBar(
@@ -50,7 +50,7 @@ class _SchoolWeekScreenState extends State<SchoolWeekScreen> {
         title: Padding(
           padding: EdgeInsets.only(top: 20.h),
           child: Text(
-            'Школа №178',
+            pageName.toString(),
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,

@@ -5,7 +5,7 @@ import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/screens/foodsListScreen.dart';
-import 'package:on_canteen/screens/schoolWeekScreen.dart';
+import 'package:on_canteen/screens/institutionWeekScreen.dart';
 
 class MenuListScreen extends StatefulWidget {
   static const String id = 'menuList_screen';

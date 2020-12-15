@@ -3,9 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/components/myRow.dart';
 
 class InstitutionCard extends StatelessWidget {
+  final int id;
+  final String name;
   final Function onTap;
   final bool isDisabled;
-  InstitutionCard({@required this.isDisabled, @required this.onTap});
+  InstitutionCard(
+      {@required this.id,
+      @required this.name,
+      @required this.isDisabled,
+      @required this.onTap});
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
@@ -35,17 +41,18 @@ class InstitutionCard extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 6,
-                      child: SizedBox(
-                        width: 50.w,
-                        height: 50.h,
-                        child: Image.asset(
-                          "images/icon.png",
-                          fit: BoxFit.scaleDown,
+                      child: CircleAvatar(
+                        backgroundColor: Color(0xffFABF03),
+                        radius: 30.h,
+                        child: Icon(
+                          Icons.account_balance_sharp,
+                          color: Color(0xff2A2F33),
+                          size: 30.h,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Text('Школы',
+                      child: Text(name.toString(),
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 14.sp,

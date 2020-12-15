@@ -10,13 +10,13 @@ import 'package:on_canteen/screens/auth/registration.dart';
 import 'package:on_canteen/screens/buffetItemScreen.dart';
 import 'package:on_canteen/screens/buffetScreen.dart';
 import 'package:on_canteen/screens/foodsListScreen.dart';
-import 'package:on_canteen/screens/institutionsScreen.dart';
+import 'package:on_canteen/screens/institutionTypesScreen.dart';
 import 'package:on_canteen/screens/menuListScreen.dart';
-import 'package:on_canteen/screens/schoolWeekScreen.dart';
-import 'package:on_canteen/screens/schoolsScreen.dart';
+import 'package:on_canteen/screens/institutionWeekScreen.dart';
+import 'package:on_canteen/screens/institutionsScreen.dart';
 import 'package:on_canteen/screens/singleFoodScreen.dart';
 import 'classes/authClasses.dart';
-import 'package:on_canteen/network/auth.dart';
+import 'package:on_canteen/network/data.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 LogOut signOut;
@@ -50,9 +50,9 @@ class MyApp extends StatelessWidget {
           LoginScreen.id: (context) => LoginScreen(),
           RegistrationScreen.id: (context) => RegistrationScreen(),
           WelcomeScreen.id: (context) => WelcomeScreen(),
+          InstitutionTypesScreen.id: (context) => InstitutionTypesScreen(),
           InstitutionsScreen.id: (context) => InstitutionsScreen(),
-          SchoolsScreen.id: (context) => SchoolsScreen(),
-          SchoolWeekScreen.id: (context) => SchoolWeekScreen(),
+          InstitutionWeekScreen.id: (context) => InstitutionWeekScreen(),
           MenuListScreen.id: (context) => MenuListScreen(),
           FoodsListScreen.id: (context) => FoodsListScreen(),
           SingleFoodScreen.id: (context) => SingleFoodScreen(),
@@ -95,7 +95,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     try {
       for (var i in tokenItems) {
         if (i.tokenKey == 'token') {
-          Navigator.pushReplacementNamed(context, InstitutionsScreen.id,
+          Navigator.pushReplacementNamed(context, InstitutionTypesScreen.id,
               arguments: {'addToken': addNewItem, 'deleteAll': deleteAll});
           return;
         }

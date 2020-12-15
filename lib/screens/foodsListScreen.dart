@@ -4,7 +4,7 @@ import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/components/institutionCard.dart';
 import 'package:on_canteen/components/myRow.dart';
-import 'package:on_canteen/screens/schoolWeekScreen.dart';
+import 'package:on_canteen/screens/institutionWeekScreen.dart';
 import 'package:on_canteen/screens/singleFoodScreen.dart';
 
 class FoodsListScreen extends StatefulWidget {

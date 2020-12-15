@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:on_canteen/classes/BuffetItemTypes.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
+import 'package:on_canteen/network/data.dart';
 import 'buffetItemScreen.dart';
+import 'institutionTypesScreen.dart';
+
+int chosenBuffetItemTypeId = 2;
 
 class BuffetScreen extends StatefulWidget {
   static const String id = 'buffet_screen';
@@ -11,11 +16,14 @@ class BuffetScreen extends StatefulWidget {
 }
 
 class _BuffetScreenState extends State<BuffetScreen> {
+  Future<List<BuffetItemTypes>> futureBuffetItemTypesList;
   bool cardDisabled = false;
 
   @override
   void initState() {
     super.initState();
+    futureBuffetItemTypesList =
+        fetchBuffetItemTypes(context, chosenInstitutionId);
     cardDisabled = false;
   }
 
@@ -62,76 +70,52 @@ class _BuffetScreenState extends State<BuffetScreen> {
           alignment: Alignment.topCenter,
           child: ScrollConfiguration(
             behavior: MyBehavior(),
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: [
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
+            child: FutureBuilder<List<BuffetItemTypes>>(
+              future: futureBuffetItemTypesList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return CustomCard(
+                        id: snapshot.data[index].id,
+                        title: snapshot.data[index].name,
+                        isFood: false,
+                        isBuffet: true,
+                        onTap: () {
+                          if (!mounted) return;
+                          setState(() {
+                            cardDisabled = true;
+                          });
+                          chosenBuffetItemTypeId = snapshot.data[index].id;
+                          Navigator.pushNamed(context, BuffetItemScreen.id,
+                              arguments: {
+                                'pageName': snapshot.data[index].name
+                              });
+                          if (!mounted) return;
+                          setState(() {
+                            cardDisabled = false;
+                          });
+                        },
+                      );
                     },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  CustomCard(
-                    title: 'Напитки',
-                    onTap: () {
-                      Navigator.pushNamed(context, BuffetItemScreen.id);
-                    },
-                    isFood: false,
-                    isBuffet: true,
-                  ),
-                  SizedBox(height: 20.h, width: double.infinity),
-                ],
-              ),
+                    itemCount: snapshot.data.length,
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    "Список пуст".toUpperCase(),
+                    style: TextStyle(
+                        color: Color(0xff222222),
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700),
+                  ));
+                }
+                // By default, show a loading spinner.
+                return Center(
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xffFABF03))));
+              },
             ),
           ),
         ),

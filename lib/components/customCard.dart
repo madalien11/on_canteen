@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCard extends StatelessWidget {
+  final int id;
   final String title;
   final String foodSubtitle;
   final String price;
@@ -10,6 +11,7 @@ class CustomCard extends StatelessWidget {
   final bool isBuffet;
   final bool isBuffetItem;
   CustomCard({
+    @required this.id,
     @required this.title,
     @required this.onTap,
     this.isFood = false,

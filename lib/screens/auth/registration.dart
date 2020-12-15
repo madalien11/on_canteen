@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
-import 'package:on_canteen/network/auth.dart';
+import 'package:on_canteen/network/data.dart';
 // import 'package:plyushka/screens/user/enterCodeScreen.dart';
 import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
