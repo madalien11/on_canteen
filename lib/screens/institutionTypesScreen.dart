@@ -9,6 +9,7 @@ import 'package:on_canteen/network/data.dart';
 import 'package:on_canteen/screens/askQuestionScreen.dart';
 import 'package:on_canteen/screens/institutionsScreen.dart';
 import 'QAScreen.dart';
+import 'auth/login.dart';
 
 int chosenInstitutionId = 2;
 
@@ -47,12 +48,36 @@ class _InstitutionTypesScreenState extends State<InstitutionTypesScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(360, 706), allowFontScaling: false);
+    final Map map = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: Color(0xff22272B),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(top: 20.h),
+            child: IconButton(
+                icon: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (logOutInData != null) {
+                    logOutInData();
+                    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id,
+                        (Route<dynamic> route) => false,
+                        arguments: {'addToken': addTokenInData});
+                  } else if (map != null && map['deleteAll'] != null) {
+                    map['deleteAll']();
+                    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id,
+                        (Route<dynamic> route) => false,
+                        arguments: {'addToken': map['addToken']});
+                  }
+                }),
+          )
+        ],
         title: Padding(
           padding: EdgeInsets.only(top: 20.h),
           child: Text(
@@ -115,7 +140,7 @@ class _InstitutionTypesScreenState extends State<InstitutionTypesScreen> {
                             child: Text(
                           "Список организации пуст".toUpperCase(),
                           style: TextStyle(
-                              color: Color(0xff222222),
+                              color: Color(0xffFABF03),
                               fontSize: 20.sp,
                               fontWeight: FontWeight.w700),
                         ));
@@ -173,7 +198,7 @@ class _InstitutionTypesScreenState extends State<InstitutionTypesScreen> {
                               child: Text(
                             "Список диетологов пуст".toUpperCase(),
                             style: TextStyle(
-                                color: Color(0xff222222),
+                                color: Color(0xffFABF03),
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w700),
                           ));

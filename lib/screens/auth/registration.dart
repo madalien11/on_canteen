@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
+import 'package:on_canteen/classes/region.dart';
 import 'package:on_canteen/network/data.dart';
-// import 'package:plyushka/screens/user/enterCodeScreen.dart';
+import 'package:on_canteen/network/regionsList.dart';
+import 'confirmationCode.dart';
 import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/myTextField.dart';
@@ -19,18 +21,20 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _emailTextController = TextEditingController();
   final _phoneNumTextController = TextEditingController();
-  final _nameTextController = TextEditingController();
+  final _firstNameTextController = TextEditingController();
+  final _lastNameTextController = TextEditingController();
   final _passTextController = TextEditingController();
   final _confirmPassTextController = TextEditingController();
 
   String _email;
   String _phoneNum;
-  String _name;
+  String _firstName;
+  String _lastName;
   String _password;
   String _confirmPassword;
-  String dropdownValue = 'One';
+  String dropdownValue =
+      listOfRegions.isNotEmpty ? listOfRegions[0].name : 'none';
 
-  bool checkedValue = false;
   bool _hidePass;
   bool _hideConfirmPass;
   bool _isButtonDisabled;
@@ -96,11 +100,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             Container(
                               height: 84.h,
                               child: MyTextField(
-                                myController: _nameTextController,
+                                myController: _firstNameTextController,
                                 onChanged: (value) {
-                                  _name = value;
+                                  _firstName = value;
                                 },
-                                title: 'Имя Фамилия',
+                                title: 'Имя',
+                                myPrefixIcon: Icon(
+                                  Icons.person_outline_outlined,
+                                  color: Color(0xff979797),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 84.h,
+                              child: MyTextField(
+                                myController: _lastNameTextController,
+                                onChanged: (value) {
+                                  _lastName = value;
+                                },
+                                title: 'Фамилия',
                                 myPrefixIcon: Icon(
                                   Icons.person_outline_outlined,
                                   color: Color(0xff979797),
@@ -234,16 +252,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           dropdownValue = newValue;
                                         });
                                       },
-                                      items: <String>[
-                                        'One',
-                                        'Two',
-                                        'Free',
-                                        'Four'
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
+                                      items: listOfRegions
+                                          .map<DropdownMenuItem<String>>(
+                                              (Region value) {
                                         return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
+                                          value: value.name,
+                                          child: Text(value.name),
                                         );
                                       }).toList(),
                                     ),
@@ -256,64 +270,99 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               child: MyButton(
                                 isButtonDisabled: _isButtonDisabled,
                                 onPressed: () async {
+                                  // Navigator.pushNamed(
+                                  //     context, ConfirmationCodeScreen.id,
+                                  //     arguments: {
+                                  //       'email': _email,
+                                  //       'fromRegistration': true
+                                  //     });
+                                  // return;
                                   if (!mounted) return;
                                   setState(() {
                                     _isLoading = true;
                                     _isButtonDisabled = true;
                                   });
+
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());
                                   if (_emailTextController.text.isNotEmpty &&
-                                      _nameTextController.text.isNotEmpty &&
+                                      _firstNameTextController
+                                          .text.isNotEmpty &&
+                                      _phoneNumTextController.text.isNotEmpty &&
+                                      _lastNameTextController.text.isNotEmpty &&
                                       _passTextController.text.isNotEmpty &&
                                       _confirmPassTextController
                                           .text.isNotEmpty) {
-                                    try {
-                                      final response = await Registration(
-                                              email: _email,
-                                              username: _name,
-                                              phoneNum: _phoneNum,
-                                              password1: _password,
-                                              password2: _confirmPassword)
-                                          .register();
-                                      if (response.statusCode >= 200 &&
-                                          response.statusCode < 203) {
-                                        String source = Utf8Decoder()
-                                            .convert(response.bodyBytes);
-                                        showAlertDialog(
-                                            context,
-                                            jsonDecode(source)['detail'] ??
-                                                'null', () {
-                                          FocusScope.of(context)
-                                              .requestFocus(new FocusNode());
-                                          Navigator.pop(context);
-                                          // Navigator.pushNamed(context, EnterCodeScreen.id,
-                                          //     arguments: {'email': _email});
-                                        });
-                                        _nameTextController.clear();
-                                        _emailTextController.clear();
-                                        _passTextController.clear();
-                                        _confirmPassTextController.clear();
-                                      } else {
-                                        setState(() {
+                                    if (validateMobile(_phoneNum.replaceAll(
+                                            new RegExp(r"\s+"), "")) ==
+                                        null) {
+                                      try {
+                                        final response = await Registration(
+                                                email: _email,
+                                                firstName: _firstName,
+                                                lastName: _lastName,
+                                                phoneNum: _phoneNum,
+                                                password1: _password,
+                                                password2: _confirmPassword)
+                                            .register();
+
+                                        if (response.statusCode >= 200 &&
+                                            response.statusCode < 203) {
                                           String source = Utf8Decoder()
                                               .convert(response.bodyBytes);
+                                          print(source);
                                           showAlertDialog(
                                               context,
                                               jsonDecode(source)['detail'] ??
-                                                  'Invalid username', () {
+                                                  'null', () {
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
                                             Navigator.pop(context);
+                                            Navigator.pushNamed(context,
+                                                ConfirmationCodeScreen.id,
+                                                arguments: {
+                                                  'email': _email,
+                                                  'fromRegistration': true,
+                                                });
                                           });
+                                          _lastNameTextController.clear();
+                                          _firstNameTextController.clear();
+                                          _emailTextController.clear();
+                                          _passTextController.clear();
+                                          _confirmPassTextController.clear();
+                                        } else {
+                                          setState(() {
+                                            String source = Utf8Decoder()
+                                                .convert(response.bodyBytes);
+                                            showAlertDialog(
+                                                context,
+                                                jsonDecode(source)['detail'] ??
+                                                    'Invalid username', () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
+                                              Navigator.pop(context);
+                                            });
+                                          });
+                                        }
+                                      } catch (e) {
+                                        showAlertDialog(context, e.toString(),
+                                            () {
+                                          FocusScope.of(context)
+                                              .requestFocus(new FocusNode());
+                                          Navigator.pop(context);
                                         });
                                       }
-                                    } catch (e) {
-                                      showAlertDialog(context, e.toString(),
-                                          () {
-                                        FocusScope.of(context)
-                                            .requestFocus(new FocusNode());
-                                        Navigator.pop(context);
+                                    } else {
+                                      if (!mounted) return;
+                                      setState(() {
+                                        showAlertDialog(
+                                            context,
+                                            validateMobile(_phoneNum.replaceAll(
+                                                new RegExp(r"\s+"), "")), () {
+                                          Navigator.pop(context);
+                                        });
+                                        _isButtonDisabled = false;
                                       });
                                     }
                                   } else {

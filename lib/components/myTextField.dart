@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+String validateMobile(String value) {
+  // +7777 777 77 77 or 8777 777 77 77
+  String pattern = r'(^([+7][7][0-9]{10}|[8][7][0-9]{9})$)';
+  RegExp regExp = new RegExp(pattern);
+  if (value.length == 0) {
+    return 'Пожалуйста, введите ваш номер';
+  } else if (!regExp.hasMatch(value)) {
+    return 'Пожалуйста, введите правильный номер';
+  }
+  return null;
+}
+
 class MyTextField extends StatelessWidget {
   final TextEditingController myController;
   final TextInputType myKeyboardType;
@@ -25,6 +37,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(360, 706), allowFontScaling: false);
+    Pattern pattern = r'(^([+7][7][0-9]{10}|[8][7][0-9]{9})$)';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -44,7 +57,7 @@ class MyTextField extends StatelessWidget {
             autofocus: false,
             inputFormatters: myKeyboardType == TextInputType.phone
                 ? <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'^([8])|([7])$')),
+                    // FilteringTextInputFormatter.allow(pattern),
                   ]
                 : <TextInputFormatter>[],
             obscureText: myObscureText,

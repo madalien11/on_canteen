@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:on_canteen/classes/dateClass.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/weekDayCard.dart';
+import 'package:on_canteen/network/data.dart';
 import 'buffetScreen.dart';
+import 'institutionTypesScreen.dart';
 import 'menuListScreen.dart';
+
+int chosenDayId = 9;
 
 class InstitutionWeekScreen extends StatefulWidget {
   static const String id = 'institutionWeek_screen';
@@ -12,12 +17,32 @@ class InstitutionWeekScreen extends StatefulWidget {
 }
 
 class _InstitutionWeekScreenState extends State<InstitutionWeekScreen> {
+  Future<List<DateClass>> futureDates;
   String pageName = '';
   bool cardDisabled = false;
+
+  String getShortName(String fullName) {
+    String short = '';
+    if (fullName.toLowerCase() == 'понедельник')
+      short = 'Пн';
+    else if (fullName.toLowerCase() == 'вторник')
+      short = 'Вт';
+    else if (fullName.toLowerCase() == 'среда')
+      short = 'Ср';
+    else if (fullName.toLowerCase() == 'четверг')
+      short = 'Чт';
+    else if (fullName.toLowerCase() == 'пятница')
+      short = 'Пт';
+    else if (fullName.toLowerCase() == 'суббота')
+      short = 'Сб';
+    else if (fullName.toLowerCase() == 'воскресенье') short = 'Вс';
+    return short;
+  }
 
   @override
   void initState() {
     super.initState();
+    futureDates = fetchDates(context, chosenInstitutionId);
     cardDisabled = false;
   }
 
@@ -114,28 +139,62 @@ class _InstitutionWeekScreenState extends State<InstitutionWeekScreen> {
                   alignment: Alignment.topCenter,
                   child: ScrollConfiguration(
                     behavior: MyBehavior(),
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                        children: [
-                          WeekDayCard(
-                              title: 'ПН',
-                              onTap: () {
-                                Navigator.pushNamed(context, MenuListScreen.id);
-                              },
-                              subtitle: 'Понедельник'),
-                          WeekDayCard(
-                              title: 'ВТ',
-                              onTap: null,
-                              subtitle: 'Вторник',
-                              isToday: true),
-                          WeekDayCard(
-                              title: 'СР', onTap: null, subtitle: 'Среда'),
-                          WeekDayCard(
-                              title: 'ЧТ', onTap: null, subtitle: 'Четверг'),
-                          WeekDayCard(
-                              title: 'ПТ', onTap: null, subtitle: 'Пятница'),
-                        ],
-                      ),
+                    child: FutureBuilder<List<DateClass>>(
+                      future: futureDates,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        MediaQuery.of(context).size.width ~/
+                                            180,
+                                    childAspectRatio: 170.w / 90.h),
+                            itemBuilder: (context, index) {
+                              return WeekDayCard(
+                                id: snapshot.data[index].id,
+                                name: getShortName(snapshot.data[index].name),
+                                isToday: snapshot.data[index].today,
+                                subtitle: snapshot.data[index].name,
+                                onTap: () {
+                                  if (!mounted) return;
+                                  setState(() {
+                                    cardDisabled = true;
+                                  });
+                                  chosenDayId = snapshot.data[index].id;
+                                  Navigator.pushNamed(
+                                      context, MenuListScreen.id,
+                                      arguments: {
+                                        'pageName': snapshot.data[index].name,
+                                        'dayId': snapshot.data[index].id,
+                                      });
+                                  if (!mounted) return;
+                                  setState(() {
+                                    cardDisabled = false;
+                                  });
+                                },
+                              );
+                            },
+                            itemCount: snapshot.data.length > 0
+                                ? 7
+                                : snapshot.data.length,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text(
+                            "Список пуст".toUpperCase(),
+                            style: TextStyle(
+                                color: Color(0xffFABF03),
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700),
+                          ));
+                        }
+                        // By default, show a loading spinner.
+                        return Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xffFABF03))));
+                      },
                     ),
                   ),
                 ),

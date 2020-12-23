@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
@@ -5,6 +7,7 @@ import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/myTextField.dart';
 import 'package:on_canteen/components/myButton.dart';
+import 'package:on_canteen/network/data.dart';
 
 class AskQuestionScreen extends StatefulWidget {
   static const String id = 'askQuestion_screen';
@@ -191,15 +194,61 @@ class _AskQuestionScreenState extends State<AskQuestionScreen> {
                                             .text.isNotEmpty &&
                                         _phoneNumTextController
                                             .text.isNotEmpty) {
-                                      setState(() {
-                                        showAlertDialog(context,
-                                            'Ожидайте ответ в течении 24 часов',
-                                            () {
-                                          FocusScope.of(context)
-                                              .requestFocus(new FocusNode());
-                                          Navigator.pop(context);
-                                        }, questionSent: true);
-                                      });
+                                      if (validateMobile(_phoneNum.replaceAll(
+                                              new RegExp(r"\s+"), "")) ==
+                                          null) {
+                                        dynamic outcome = await CreateForm(
+                                          name: _name,
+                                          phoneNumber: _phoneNum.replaceAll(
+                                              new RegExp(r"\s+"), ""),
+                                          question: _question,
+                                        ).create();
+                                        String source = Utf8Decoder()
+                                            .convert(outcome.bodyBytes);
+                                        if (outcome.statusCode == 401) {
+                                          if (!mounted) return;
+                                          setState(() {
+                                            showAlertDialog(context,
+                                                jsonDecode(source)['detail'],
+                                                () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
+                                              Navigator.pop(context);
+                                            }, questionSent: false);
+                                            _isButtonDisabled = false;
+                                          });
+                                        } else if (outcome.statusCode == 200) {
+                                          if (!mounted) return;
+                                          setState(() {
+                                            showAlertDialog(context,
+                                                jsonDecode(source)['detail'],
+                                                () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
+                                              Navigator.pop(context);
+                                            }, questionSent: true);
+                                            _isButtonDisabled = false;
+                                          });
+                                          _nameTextController.clear();
+                                          _phoneNumTextController.clear();
+                                          _questionTextController.clear();
+                                        }
+                                      } else {
+                                        if (!mounted) return;
+                                        setState(() {
+                                          showAlertDialog(
+                                              context,
+                                              validateMobile(
+                                                  _phoneNum.replaceAll(
+                                                      new RegExp(r"\s+"), "")),
+                                              () {
+                                            Navigator.pop(context);
+                                          });
+                                          _isButtonDisabled = false;
+                                        });
+                                      }
                                     } else {
                                       setState(() {
                                         showAlertDialog(context,

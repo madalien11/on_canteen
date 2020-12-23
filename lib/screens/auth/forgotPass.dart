@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/network/data.dart';
-import 'registrationCode.dart';
+import 'confirmationCode.dart';
 import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/myTextField.dart';
@@ -19,7 +19,6 @@ class ForgotPassScreen extends StatefulWidget {
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
   final _emailTextController = TextEditingController();
   String _email;
-
   bool _isButtonDisabled;
   bool _isLoading;
 
@@ -98,10 +97,13 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                               child: MyButton(
                                 isButtonDisabled: _isButtonDisabled,
                                 onPressed: () async {
-                                  // Navigator.pushNamed(
-                                  //     context, ForgotPassCodeScreen.id,
-                                  //     arguments: {'email': _email});
-                                  // return;
+                                  Navigator.pushNamed(
+                                      context, ConfirmationCodeScreen.id,
+                                      arguments: {
+                                        'email': _email,
+                                        'fromRegistration': false
+                                      });
+                                  return;
                                   if (!mounted) return;
                                   setState(() {
                                     _isLoading = true;
@@ -127,8 +129,11 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                                               .requestFocus(new FocusNode());
                                           Navigator.pop(context);
                                           Navigator.pushNamed(context,
-                                              RegistrationCodeScreen.id,
-                                              arguments: {'email': _email});
+                                              ConfirmationCodeScreen.id,
+                                              arguments: {
+                                                'email': _email,
+                                                'fromRegistration': false
+                                              });
                                         });
                                         _emailTextController.clear();
                                       } else {
@@ -170,7 +175,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                                     _isLoading = false;
                                   });
                                 },
-                                title: 'ЗАРЕГИСТРИРОВАТЬСЯ',
+                                title: 'ОТПРАВИТЬ',
                               ),
                             ),
                           ],

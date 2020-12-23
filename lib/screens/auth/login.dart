@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/network/data.dart';
 import 'package:on_canteen/screens/institutionTypesScreen.dart';
+import 'forgotPass.dart';
 import 'registration.dart';
 import 'dart:convert';
 import 'package:on_canteen/components/showAlertDialog.dart';
@@ -251,8 +252,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         onPressed: () {
                                           FocusScope.of(context)
                                               .requestFocus(new FocusNode());
-                                          // Navigator.pushNamed(
-                                          //     context, ForgotPasswordScreen.id);
+                                          Navigator.pushNamed(
+                                              context, ForgotPassScreen.id);
                                         },
                                         child: Text(
                                           'Забыли Пароль?',
@@ -274,9 +275,102 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: MyButton(
                               title: 'ВХОД',
                               isButtonDisabled: _isButtonDisabled,
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, InstitutionTypesScreen.id);
+                              onPressed: () async {
+                                if (!mounted) return;
+                                setState(() {
+                                  _isLoading = true;
+                                  _isButtonDisabled = true;
+                                });
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                                if (_passTextController.text.isNotEmpty &&
+                                    _phoneNumTextController.text.isNotEmpty) {
+                                  if (validateMobile(_phoneNum.replaceAll(
+                                          new RegExp(r"\s+"), "")) ==
+                                      null) {
+                                    dynamic outcome = await Login(
+                                            phoneNum: _phoneNum,
+                                            password: _password)
+                                        .login();
+                                    String source = Utf8Decoder()
+                                        .convert(outcome.bodyBytes);
+                                    if (outcome.statusCode == 401) {
+                                      if (!mounted) return;
+                                      setState(() {
+                                        showAlertDialog(context,
+                                            jsonDecode(source)['detail'], () {
+                                          Navigator.pop(context);
+                                          if (!mounted) return;
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                        });
+                                        _isLoading = false;
+                                        _isButtonDisabled = false;
+                                      });
+                                    } else if (outcome.statusCode == 200) {
+                                      dynamic userInfo = jsonDecode(source);
+                                      print(userInfo);
+                                      tokenString = userInfo['access'];
+                                      refreshTokenString = userInfo['refresh'];
+                                      if (checkedValue) {
+                                        if (addTokenInData != null) {
+                                          addTokenInData('token',
+                                              userInfo['access'].toString());
+                                          addTokenInData('refresh',
+                                              userInfo['refresh'].toString());
+                                          Navigator.pushReplacementNamed(
+                                              context,
+                                              InstitutionTypesScreen.id,
+                                              arguments: {
+                                                'addToken': addTokenInData,
+                                                'deleteAll': logOutInData,
+                                                'checkedValue': checkedValue
+                                              });
+                                        }
+                                      } else {
+                                        Navigator.pushReplacementNamed(
+                                            context, InstitutionTypesScreen.id,
+                                            arguments: {
+                                              'checkedValue': checkedValue
+                                            });
+                                      }
+                                      if (!mounted) return;
+                                      setState(() {
+                                        _isLoading = false;
+                                        _isButtonDisabled = false;
+                                      });
+                                      _phoneNumTextController.clear();
+                                      _passTextController.clear();
+                                    }
+                                  } else {
+                                    if (!mounted) return;
+                                    setState(() {
+                                      showAlertDialog(
+                                          context,
+                                          validateMobile(_phoneNum.replaceAll(
+                                              new RegExp(r"\s+"), "")), () {
+                                        Navigator.pop(context);
+                                      });
+                                      _isButtonDisabled = false;
+                                    });
+                                  }
+                                } else {
+                                  if (!mounted) return;
+                                  setState(() {
+                                    showAlertDialog(context,
+                                        'Email and/or password cannot be empty',
+                                        () {
+                                      Navigator.pop(context);
+                                      if (!mounted) return;
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    });
+                                    _isLoading = false;
+                                    _isButtonDisabled = false;
+                                  });
+                                }
                               },
                             ),
                           ),

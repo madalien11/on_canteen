@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
+import 'package:on_canteen/classes/menu.dart';
 import 'package:on_canteen/components/customCard.dart';
-import 'package:on_canteen/components/institutionCard.dart';
-import 'package:on_canteen/components/myRow.dart';
-import 'package:on_canteen/screens/foodsListScreen.dart';
-import 'package:on_canteen/screens/institutionWeekScreen.dart';
+import 'package:on_canteen/network/data.dart';
+import 'foodsListScreen.dart';
+import 'institutionTypesScreen.dart';
+import 'institutionWeekScreen.dart';
 
 class MenuListScreen extends StatefulWidget {
   static const String id = 'menuList_screen';
@@ -14,11 +15,14 @@ class MenuListScreen extends StatefulWidget {
 }
 
 class _MenuListScreenState extends State<MenuListScreen> {
+  Future<List<Menu>> futureMenus;
   bool cardDisabled = false;
+  String pageName = '';
 
   @override
   void initState() {
     super.initState();
+    futureMenus = fetchMenus(context, chosenInstitutionId, chosenDayId);
     cardDisabled = false;
   }
 
@@ -32,6 +36,8 @@ class _MenuListScreenState extends State<MenuListScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(360, 706), allowFontScaling: false);
+    final Map map = ModalRoute.of(context).settings.arguments;
+    if (map != null && map['pageName'] != null) pageName = map['pageName'];
     return Scaffold(
       backgroundColor: Color(0xff22272B),
       appBar: AppBar(
@@ -49,7 +55,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
         title: Padding(
           padding: EdgeInsets.only(top: 20.h),
           child: Text(
-            'Понедельник',
+            pageName.toString(),
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -65,54 +71,50 @@ class _MenuListScreenState extends State<MenuListScreen> {
           alignment: Alignment.topCenter,
           child: ScrollConfiguration(
             behavior: MyBehavior(),
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: [
-                  CustomCard(
-                    title: 'Меню 1',
-                    onTap: () {
-                      Navigator.pushNamed(context, FoodsListScreen.id);
-                      print('school');
+            child: FutureBuilder<List<Menu>>(
+              future: futureMenus,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return CustomCard(
+                        id: snapshot.data[index].id,
+                        title: snapshot.data[index].name,
+                        // isFood: false,
+                        // isBuffet: true,
+                        // isBuffetItem: true,
+                        foodSubtitle: snapshot.data[index].description,
+                        onTap: () {
+                          if (!mounted) return;
+                          setState(() {
+                            cardDisabled = true;
+                          });
+                          Navigator.pushNamed(context, FoodsListScreen.id);
+                          if (!mounted) return;
+                          setState(() {
+                            cardDisabled = false;
+                          });
+                        },
+                      );
                     },
-                  ),
-                  CustomCard(
-                    title: 'Меню 2',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                  CustomCard(
-                    title: 'Завтрак',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                  CustomCard(
-                    title: 'Обед',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                  CustomCard(
-                    title: 'Школа №178',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                  CustomCard(
-                    title: 'Школа №178',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                  CustomCard(
-                    title: 'Школа №178',
-                    onTap: () {
-                      print('school');
-                    },
-                  ),
-                ],
-              ),
+                    itemCount: snapshot.data.length,
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    "Список пуст".toUpperCase(),
+                    style: TextStyle(
+                        color: Color(0xffFABF03),
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700),
+                  ));
+                }
+                // By default, show a loading spinner.
+                return Center(
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xffFABF03))));
+              },
             ),
           ),
         ),

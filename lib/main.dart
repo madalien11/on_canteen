@@ -3,10 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_back_gesture/cupertino_back_gesture.dart';
 import 'package:flutter/services.dart';
+import 'package:on_canteen/classes/region.dart';
+import 'package:on_canteen/network/regionsList.dart';
 import 'package:on_canteen/screens/QAScreen.dart';
 import 'package:on_canteen/screens/askQuestionScreen.dart';
+import 'package:on_canteen/screens/auth/forgotPass.dart';
 import 'package:on_canteen/screens/auth/login.dart';
+import 'package:on_canteen/screens/auth/newPass.dart';
 import 'package:on_canteen/screens/auth/registration.dart';
+import 'package:on_canteen/screens/auth/confirmationCode.dart';
 import 'package:on_canteen/screens/buffetItemScreen.dart';
 import 'package:on_canteen/screens/buffetScreen.dart';
 import 'package:on_canteen/screens/foodsListScreen.dart';
@@ -60,6 +65,9 @@ class MyApp extends StatelessWidget {
           QAScreen.id: (context) => QAScreen(),
           BuffetScreen.id: (context) => BuffetScreen(),
           BuffetItemScreen.id: (context) => BuffetItemScreen(),
+          ConfirmationCodeScreen.id: (context) => ConfirmationCodeScreen(),
+          ForgotPassScreen.id: (context) => ForgotPassScreen(),
+          NewPassScreen.id: (context) => NewPassScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.amber,
@@ -142,9 +150,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     _readAll();
   }
 
+  void regions() async {
+    var outcome = await Regions().getData();
+    if (outcome != null) {
+      List regionsList = outcome['data'];
+      for (int i = 0; i < regionsList.length; i++) {
+        mapOfRegions.addAll({
+          regionsList[i]['id'].toInt(): Region(
+              id: regionsList[i]['id'].toInt(),
+              name: regionsList[i]['name'].toString(),
+              deleted: regionsList[i]['deleted'])
+        });
+        listOfRegions.clear();
+        for (var x in mapOfRegions.keys) {
+          listOfRegions.add(mapOfRegions[x]);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    regions();
     signOut = LogOut(deleteAll: deleteAll);
     addTokenIns = AddTokenClass(addTokenClass: addNewItem);
     logOutInData = signOut.deleteAll;

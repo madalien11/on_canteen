@@ -7,21 +7,19 @@ import 'package:on_canteen/components/showAlertDialog.dart';
 import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/components/myTextField.dart';
 import 'package:on_canteen/components/myButton.dart';
+import 'package:on_canteen/screens/auth/newPass.dart';
 import 'login.dart';
 
-class RegistrationCodeScreen extends StatefulWidget {
-  static const String id = 'registrationCode_screen';
+class ConfirmationCodeScreen extends StatefulWidget {
+  static const String id = 'confirmationCode_screen';
 
   @override
-  _RegistrationCodeScreenState createState() => _RegistrationCodeScreenState();
+  _ConfirmationCodeScreenState createState() => _ConfirmationCodeScreenState();
 }
 
-class _RegistrationCodeScreenState extends State<RegistrationCodeScreen> {
+class _ConfirmationCodeScreenState extends State<ConfirmationCodeScreen> {
   final _codeTextController = TextEditingController();
-
   String _code;
-
-  bool checkedValue = false;
   bool _isButtonDisabled;
   bool _isLoading;
 
@@ -100,6 +98,18 @@ class _RegistrationCodeScreenState extends State<RegistrationCodeScreen> {
                               child: MyButton(
                                 isButtonDisabled: _isButtonDisabled,
                                 onPressed: () async {
+                                  map['fromRegistration']
+                                      ? Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          LoginScreen.id,
+                                          (Route<dynamic> route) => false,
+                                          arguments: {
+                                              'addToken': addTokenInData
+                                            })
+                                      : Navigator.pushNamed(
+                                          context, NewPassScreen.id,
+                                          arguments: {'email': map['email']});
+                                  return;
                                   if (!mounted) return;
                                   setState(() {
                                     _isLoading = true;
@@ -123,13 +133,21 @@ class _RegistrationCodeScreenState extends State<RegistrationCodeScreen> {
                                           FocusScope.of(context)
                                               .requestFocus(new FocusNode());
                                           Navigator.pop(context);
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              LoginScreen.id,
-                                              (Route<dynamic> route) => false,
-                                              arguments: {
-                                                'addToken': addTokenInData
-                                              });
+                                          map['fromRegistration']
+                                              ? Navigator
+                                                  .pushNamedAndRemoveUntil(
+                                                      context,
+                                                      LoginScreen.id,
+                                                      (Route<dynamic> route) =>
+                                                          false,
+                                                      arguments: {
+                                                      'addToken': addTokenInData
+                                                    })
+                                              : Navigator.pushNamed(
+                                                  context, NewPassScreen.id,
+                                                  arguments: {
+                                                      'email': map['email']
+                                                    });
                                         });
                                         _codeTextController.clear();
                                       } else {

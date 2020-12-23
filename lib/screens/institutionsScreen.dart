@@ -95,7 +95,7 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
                       child: Text(
                     "Список пуст".toUpperCase(),
                     style: TextStyle(
-                        color: Color(0xff222222),
+                        color: Color(0xffFABF03),
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w700),
                   ));

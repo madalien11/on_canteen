@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeekDayCard extends StatelessWidget {
-  final String title;
+  final int id;
+  final String name;
   final String subtitle;
   final Function onTap;
   final bool isToday;
   WeekDayCard({
-    @required this.title,
+    @required this.id,
+    @required this.name,
     @required this.onTap,
     @required this.subtitle,
     this.isToday = false,
@@ -18,8 +20,8 @@ class WeekDayCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 80.h,
-        width: 170.w,
+        // height: 90.h,
+        // width: 170.w,
         margin: EdgeInsets.all(2.w),
         child: Card(
           color: isToday ? Color(0xffFFEBAB) : Color(0xffFABF03),
@@ -32,7 +34,7 @@ class WeekDayCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                title,
+                name,
                 style: TextStyle(
                   color: isToday ? Color(0xffFABF03) : Colors.white,
                   fontWeight: FontWeight.w700,

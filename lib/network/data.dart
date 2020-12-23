@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:on_canteen/classes/BuffetItemTypes.dart';
 import 'package:on_canteen/classes/BuffetItems.dart';
 import 'package:on_canteen/classes/Institution.dart';
+import 'package:on_canteen/classes/dateClass.dart';
 import 'package:on_canteen/classes/dietolog.dart';
+import 'package:on_canteen/classes/food.dart';
+import 'package:on_canteen/classes/menu.dart';
 
 String tokenString;
 String refreshTokenString;
@@ -12,13 +15,89 @@ Function logOutInData = () => print('Log Out In Data');
 Function addTokenInData = () => print('Add Token In Data');
 String root = 'http://api.contra.kz/';
 
+class Regions {
+  Future getData() async {
+    http.Response response = await http.get(root + "api/regions/");
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 202) {
+      String source = Utf8Decoder().convert(response.bodyBytes);
+      return jsonDecode(source);
+    } else {
+      print('regions ' + response.statusCode.toString());
+    }
+  }
+}
+
+class CreateForm {
+  String name;
+  String phoneNumber;
+  String question;
+  CreateForm({
+    this.name,
+    this.phoneNumber,
+    this.question,
+  });
+  Future create() async {
+    http.Response response =
+        await http.post(root + 'api/question/create/', body: {
+      "name": name,
+      "phone_number": phoneNumber,
+      "question": question,
+    });
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 202) {
+      String source = Utf8Decoder().convert(response.bodyBytes);
+      return response;
+    } else {
+      print(response.statusCode);
+      return response;
+    }
+  }
+}
+
+class Registration {
+  String email;
+  String phoneNum;
+  String firstName;
+  String lastName;
+  String password1;
+  String password2;
+  Registration(
+      {@required this.email,
+      @required this.phoneNum,
+      @required this.firstName,
+      @required this.lastName,
+      @required this.password1,
+      @required this.password2});
+  Future register() async {
+    http.Response response =
+        await http.post(root + "user/registration/", body: {
+      'email': email,
+      'phone': phoneNum,
+      'first_name': firstName,
+      'last_name': lastName,
+      'password1': password1,
+      'password2': password2,
+    });
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 202) {
+      return response;
+    } else {
+      print(response.statusCode);
+      return response;
+    }
+  }
+}
+
 class Login {
   String phoneNum;
   String password;
   Login({this.phoneNum, @required this.password});
   Future login() async {
-    http.Response response =
-        await http.post("http://papi.trapezza.kz/user/login/", body: {
+    http.Response response = await http.post(root + "user/token/", body: {
       'phone': phoneNum,
       'password': password,
     });
@@ -44,38 +123,6 @@ class Refresh {
         response.statusCode == 202) {
       String source = Utf8Decoder().convert(response.bodyBytes);
       tokenString = jsonDecode(source)['access'];
-      return response;
-    } else {
-      print(response.statusCode);
-      return response;
-    }
-  }
-}
-
-class Registration {
-  String email;
-  String phoneNum;
-  String username;
-  String password1;
-  String password2;
-  Registration(
-      {@required this.email,
-      @required this.phoneNum,
-      @required this.username,
-      @required this.password1,
-      @required this.password2});
-  Future register() async {
-    http.Response response =
-        await http.post("http://papi.trapezza.kz/user/registration/", body: {
-      'email': email,
-      'phone': phoneNum,
-      'username': username,
-      'password1': password1,
-      'password2': password2,
-    });
-    if (response.statusCode == 200 ||
-        response.statusCode == 201 ||
-        response.statusCode == 202) {
       return response;
     } else {
       print(response.statusCode);
@@ -369,5 +416,94 @@ Future<List<Dietolog>> fetchDietolog(BuildContext context) async {
     return dietologs;
   } else {
     throw Exception('dietolog ' + response.statusCode.toString());
+  }
+}
+
+Future<List<DateClass>> fetchDates(
+    BuildContext context, int institutionId) async {
+  final response = await http
+      .get(root + 'api/datesByOrganization/' + institutionId.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List datesList = jsonData['data'];
+    List<DateClass> dates = [];
+    for (var date in datesList) {
+      DateClass s = DateClass(
+        id: date['id'],
+        name: date['name'],
+        week: date['week'],
+        date: date['date'],
+        today: date['today'],
+      );
+      dates.add(s);
+    }
+    return dates;
+  } else {
+    throw Exception('Dates ' + response.statusCode.toString());
+  }
+}
+
+Future<List<Menu>> fetchMenus(
+    BuildContext context, int institutionId, int dayId) async {
+  final response = await http.get(root +
+      'api/getmenu/' +
+      institutionId.toString() +
+      '/' +
+      dayId.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List menusList = jsonData['data'];
+    List<Menu> menus = [];
+    for (var menu in menusList) {
+      Menu s = Menu(
+        id: menu['id'],
+        name: menu['name'],
+        description: menu['description'],
+        img: menu['img'],
+        categoryId: menu['category']['id'],
+        categoryName: menu['category']['name'],
+      );
+      menus.add(s);
+    }
+    return menus;
+  } else {
+    throw Exception('Menus ' + response.statusCode.toString());
+  }
+}
+
+Future<List<Food>> fetchFoods(BuildContext context, int menuId) async {
+  final response = await http.get(root + 'api/getfoods/' + menuId.toString());
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List foodsList = jsonData['data'];
+    List<Food> foods = [];
+    for (var food in foodsList) {
+      Food s = Food(
+        id: food['id'],
+        name: food['name'],
+        description: food['description'],
+        img: food['img'],
+        price: food['price'],
+        certificate: food['certificate'],
+        categoryId: food['category']['id'],
+        categoryName: food['category']['name'],
+      );
+      foods.add(s);
+    }
+    return foods;
+  } else {
+    throw Exception('Foods ' + response.statusCode.toString());
   }
 }
