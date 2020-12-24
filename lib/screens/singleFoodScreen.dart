@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:on_canteen/classes/ingredient.dart';
 import 'package:on_canteen/components/singleFoodCard.dart';
+import 'package:on_canteen/network/data.dart';
+import 'foodsListScreen.dart';
 
 class SingleFoodScreen extends StatefulWidget {
   static const String id = 'singleFood_screen';
@@ -9,10 +12,28 @@ class SingleFoodScreen extends StatefulWidget {
 }
 
 class _SingleFoodScreenState extends State<SingleFoodScreen> {
+  Future<List<Ingredient>> futureIngredients;
+  String title = '';
+  String description = '';
+  String img = '';
+  String price = '';
+
+  @override
+  void initState() {
+    super.initState();
+    futureIngredients = fetchIngredients(context, chosenFoodId);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(360, 706), allowFontScaling: false);
+    final Map map = ModalRoute.of(context).settings.arguments;
+    if (map != null && map['title'] != null) title = map['title'];
+    if (map != null && map['description'] != null)
+      description = map['description'];
+    if (map != null && map['img'] != null) img = map['img'];
+    if (map != null && map['price'] != null) price = map['price'].toString();
     return Scaffold(
       backgroundColor: Color(0xff22272B),
       body: Stack(
@@ -35,8 +56,8 @@ class _SingleFoodScreenState extends State<SingleFoodScreen> {
               Expanded(
                 flex: 6,
                 child: SingleFoodCard(
-                  title: 'Паста “Болоньезе”',
-                  price: '1000 тг',
+                  title: title,
+                  price: price + ' тг',
                   ingredients: [
                     'Ingredient yeaaaah veeeeery veeeeeeeeeeeeeeery looong 1',
                     'short',
@@ -49,8 +70,7 @@ class _SingleFoodScreenState extends State<SingleFoodScreen> {
                     'short',
                     'Something',
                   ],
-                  description:
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                  description: description,
                 ),
               ),
               Expanded(child: Container()),

@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
-import 'package:on_canteen/components/institutionCard.dart';
-import 'package:on_canteen/components/myRow.dart';
-import 'package:on_canteen/screens/institutionWeekScreen.dart';
 import 'package:on_canteen/screens/singleFoodScreen.dart';
+
+int chosenFoodId = 1;
 
 class FoodsListScreen extends StatefulWidget {
   static const String id = 'foodsList_screen';
@@ -71,7 +70,7 @@ class _FoodsListScreenState extends State<FoodsListScreen> {
                   CustomCard(
                     title: 'Салат из авокадо',
                     onTap: () {
-                      print('food');
+                      chosenFoodId = 2;
                       Navigator.pushNamed(context, SingleFoodScreen.id);
                     },
                     isFood: true,

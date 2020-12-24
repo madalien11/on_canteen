@@ -7,6 +7,7 @@ import 'package:on_canteen/classes/Institution.dart';
 import 'package:on_canteen/classes/dateClass.dart';
 import 'package:on_canteen/classes/dietolog.dart';
 import 'package:on_canteen/classes/food.dart';
+import 'package:on_canteen/classes/ingredient.dart';
 import 'package:on_canteen/classes/menu.dart';
 
 String tokenString;
@@ -97,8 +98,12 @@ class Login {
   String password;
   Login({this.phoneNum, @required this.password});
   Future login() async {
+    String newNum = "";
+    for (int i = phoneNum.length - 10; i < phoneNum.length; i++) {
+      newNum += phoneNum[i];
+    }
     http.Response response = await http.post(root + "user/token/", body: {
-      'phone': phoneNum,
+      'phone': newNum,
       'password': password,
     });
     if (response.statusCode == 200 ||
@@ -505,5 +510,29 @@ Future<List<Food>> fetchFoods(BuildContext context, int menuId) async {
     return foods;
   } else {
     throw Exception('Foods ' + response.statusCode.toString());
+  }
+}
+
+Future<List<Ingredient>> fetchIngredients(
+    BuildContext context, int foodId) async {
+  final response =
+      await http.get(root + 'api/getIngredient/' + foodId.toString());
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List ingredientsList = jsonData['data'];
+    List<Ingredient> ingredients = [];
+    for (var ingredient in ingredientsList) {
+      Ingredient s = Ingredient(
+        id: ingredient['id'],
+        name: ingredient['name'],
+      );
+      ingredients.add(s);
+    }
+    return ingredients;
+  } else {
+    throw Exception('Ingredients ' + response.statusCode.toString());
   }
 }

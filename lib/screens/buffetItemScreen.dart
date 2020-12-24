@@ -3,13 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_canteen/classes/BuffetItems.dart';
 import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
-import 'package:on_canteen/components/institutionCard.dart';
-import 'package:on_canteen/components/myRow.dart';
 import 'package:on_canteen/network/data.dart';
 import 'package:on_canteen/screens/buffetScreen.dart';
-import 'package:on_canteen/screens/institutionWeekScreen.dart';
-import 'package:on_canteen/screens/singleFoodScreen.dart';
-
 import 'institutionTypesScreen.dart';
 
 class BuffetItemScreen extends StatefulWidget {
@@ -94,7 +89,12 @@ class _BuffetItemScreenState extends State<BuffetItemScreen> {
                           setState(() {
                             cardDisabled = true;
                           });
-                          Navigator.pushNamed(context, SingleFoodScreen.id);
+                          // Navigator.pushNamed(context, SingleFoodScreen.id, arguments: {
+                          //   "id": ,
+                          //   "title": ,
+                          //   "description": ,
+                          //   "price": ,
+                          // });
                           if (!mounted) return;
                           setState(() {
                             cardDisabled = false;
