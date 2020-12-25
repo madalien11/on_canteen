@@ -6,6 +6,7 @@ import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/network/data.dart';
 import 'buffetItemScreen.dart';
 import 'institutionTypesScreen.dart';
+import 'institutionsScreen.dart';
 
 int chosenBuffetItemTypeId = 2;
 

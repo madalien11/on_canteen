@@ -6,10 +6,12 @@ class CustomCard extends StatelessWidget {
   final String title;
   final String foodSubtitle;
   final String price;
+  final String img;
   final Function onTap;
   final bool isFood;
   final bool isBuffet;
   final bool isBuffetItem;
+  final bool cardDisabled;
   CustomCard({
     @required this.id,
     @required this.title,
@@ -17,7 +19,9 @@ class CustomCard extends StatelessWidget {
     this.isFood = false,
     this.isBuffet = false,
     this.isBuffetItem = false,
+    this.cardDisabled = false,
     this.foodSubtitle = '',
+    this.img = '',
     this.price = '1000 тг',
   });
 
@@ -30,10 +34,19 @@ class CustomCard extends StatelessWidget {
     return res;
   }
 
+  String stringVERYShortener(String str) {
+    String res = '';
+    for (var i = 0; i < 27; i++) {
+      res += str[i];
+    }
+    res += '...';
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: cardDisabled ? null : onTap,
       child: Container(
         height: isFood ? 100.h : 90.h,
         margin: isFood || isBuffet
@@ -54,11 +67,16 @@ class CustomCard extends StatelessWidget {
               leading: CircleAvatar(
                 backgroundColor: Color(0xffFABF03),
                 radius: 30.h,
-                child: Icon(
-                  Icons.account_balance_sharp,
-                  color: Color(0xff2A2F33),
-                  size: 30.h,
-                ),
+                backgroundImage: img.length > 0
+                    ? NetworkImage('http://api.contra.kz' + img)
+                    : null,
+                child: img.length > 0
+                    ? null
+                    : Icon(
+                        Icons.account_balance_sharp,
+                        color: Color(0xff2A2F33),
+                        size: 30.h,
+                      ),
                 // backgroundImage: AssetImage('images/icon.png'),
               ),
               trailing: isBuffetItem
@@ -85,7 +103,9 @@ class CustomCard extends StatelessWidget {
                         Expanded(
                           flex: 4,
                           child: Text(
-                            foodSubtitle,
+                            foodSubtitle.length > 30
+                                ? stringVERYShortener(foodSubtitle)
+                                : foodSubtitle,
                             style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,

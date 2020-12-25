@@ -5,8 +5,9 @@ import 'package:on_canteen/classes/deleteGlow.dart';
 import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/network/data.dart';
 import 'package:on_canteen/screens/institutionWeekScreen.dart';
-
 import 'institutionTypesScreen.dart';
+
+int chosenInstitutionId = 2;
 
 class InstitutionsScreen extends StatefulWidget {
   static const String id = 'institutions_screen';
@@ -22,7 +23,8 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
   @override
   void initState() {
     super.initState();
-    futureInstitutionsList = fetchInstitutions(context, chosenInstitutionId);
+    futureInstitutionsList =
+        fetchInstitutions(context, chosenInstitutionTypeId);
     cardDisabled = false;
   }
 
@@ -77,6 +79,7 @@ class _InstitutionsScreenState extends State<InstitutionsScreen> {
                           setState(() {
                             cardDisabled = true;
                           });
+                          chosenInstitutionId = snapshot.data[index].id;
                           Navigator.pushNamed(context, InstitutionWeekScreen.id,
                               arguments: {
                                 'pageName': snapshot.data[index].name

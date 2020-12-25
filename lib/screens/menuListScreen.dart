@@ -5,8 +5,10 @@ import 'package:on_canteen/classes/menu.dart';
 import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/network/data.dart';
 import 'foodsListScreen.dart';
-import 'institutionTypesScreen.dart';
+import 'institutionsScreen.dart';
 import 'institutionWeekScreen.dart';
+
+int chosenMenuId = 1;
 
 class MenuListScreen extends StatefulWidget {
   static const String id = 'menuList_screen';
@@ -80,6 +82,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
                       return CustomCard(
                         id: snapshot.data[index].id,
                         title: snapshot.data[index].name,
+                        img: snapshot.data[index].img,
                         // isFood: false,
                         // isBuffet: true,
                         // isBuffetItem: true,
@@ -89,7 +92,11 @@ class _MenuListScreenState extends State<MenuListScreen> {
                           setState(() {
                             cardDisabled = true;
                           });
-                          Navigator.pushNamed(context, FoodsListScreen.id);
+                          chosenMenuId = snapshot.data[index].id;
+                          Navigator.pushNamed(context, FoodsListScreen.id,
+                              arguments: {
+                                "pageName": snapshot.data[index].name,
+                              });
                           if (!mounted) return;
                           setState(() {
                             cardDisabled = false;

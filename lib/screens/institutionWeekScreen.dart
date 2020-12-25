@@ -6,6 +6,7 @@ import 'package:on_canteen/components/weekDayCard.dart';
 import 'package:on_canteen/network/data.dart';
 import 'buffetScreen.dart';
 import 'institutionTypesScreen.dart';
+import 'institutionsScreen.dart';
 import 'menuListScreen.dart';
 
 int chosenDayId = 9;

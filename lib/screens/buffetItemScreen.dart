@@ -6,6 +6,7 @@ import 'package:on_canteen/components/customCard.dart';
 import 'package:on_canteen/network/data.dart';
 import 'package:on_canteen/screens/buffetScreen.dart';
 import 'institutionTypesScreen.dart';
+import 'institutionsScreen.dart';
 
 class BuffetItemScreen extends StatefulWidget {
   static const String id = 'buffetItem_screen';
@@ -83,6 +84,7 @@ class _BuffetItemScreenState extends State<BuffetItemScreen> {
                         isFood: false,
                         isBuffet: true,
                         isBuffetItem: true,
+                        img: snapshot.data[index].img,
                         foodSubtitle: snapshot.data[index].description,
                         onTap: () {
                           if (!mounted) return;

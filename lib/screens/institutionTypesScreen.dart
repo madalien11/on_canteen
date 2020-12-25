@@ -11,7 +11,7 @@ import 'package:on_canteen/screens/institutionsScreen.dart';
 import 'QAScreen.dart';
 import 'auth/login.dart';
 
-int chosenInstitutionId = 2;
+int chosenInstitutionTypeId = 2;
 
 class InstitutionTypesScreen extends StatefulWidget {
   static const String id = 'institutionTypes_screen';
@@ -120,7 +120,8 @@ class _InstitutionTypesScreenState extends State<InstitutionTypesScreen> {
                                 setState(() {
                                   cardDisabled = true;
                                 });
-                                chosenInstitutionId = snapshot.data[index].id;
+                                chosenInstitutionTypeId =
+                                    snapshot.data[index].id;
                                 Navigator.pushNamed(
                                     context, InstitutionsScreen.id, arguments: {
                                   'pageName': snapshot.data[index].name
@@ -174,7 +175,10 @@ class _InstitutionTypesScreenState extends State<InstitutionTypesScreen> {
                             leading: CircleAvatar(
                               backgroundColor: Colors.transparent,
                               radius: 30.h,
-                              backgroundImage: AssetImage('images/icon.png'),
+                              backgroundImage: snapshot.data[0].img.length > 0
+                                  ? NetworkImage('http://api.contra.kz' +
+                                      snapshot.data[0].img)
+                                  : AssetImage('images/icon.png'),
                             ),
                             title: Text(
                               snapshot.data[0].name +
