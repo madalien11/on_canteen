@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class QACard extends StatelessWidget {
+class QACard extends StatefulWidget {
   final String question;
   final String answer;
-  final bool showAnswer;
-  final Function onTap;
+  final String name;
+  final String phoneNum;
+  final Map<int, bool> showAnswerMap;
+  final int answerId;
+  final int questionId;
   QACard({
     @required this.question,
-    @required this.onTap,
+    this.answerId,
+    this.showAnswerMap,
+    this.questionId,
     this.answer = '',
-    this.showAnswer = false,
+    this.name = '',
+    this.phoneNum = '',
   });
+
+  @override
+  _QACardState createState() => _QACardState();
+}
+
+class _QACardState extends State<QACard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        setState(() {
+          widget.showAnswerMap[widget.questionId] =
+              !widget.showAnswerMap[widget.questionId];
+        });
+      },
       child: Column(
         children: [
           Card(
@@ -24,23 +41,23 @@ class QACard extends StatelessWidget {
             elevation: 0,
             child: Center(
                 child: ListTile(
-              isThreeLine: showAnswer,
+              isThreeLine: widget.showAnswerMap[widget.questionId],
               trailing: Icon(
-                  showAnswer
+                  widget.showAnswerMap[widget.questionId]
                       ? Icons.keyboard_arrow_down_rounded
                       : Icons.arrow_forward_ios_rounded,
-                  size: showAnswer ? 44 : 24,
+                  size: widget.showAnswerMap[widget.questionId] ? 42 : 24,
                   color: Color(0xffFABF03)),
               title: Text(
-                question,
+                widget.question,
                 style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: Color(0xffF2F2F2)),
               ),
-              subtitle: showAnswer
+              subtitle: widget.showAnswerMap[widget.questionId]
                   ? Text(
-                      answer,
+                      widget.answer,
                       style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w400,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:on_canteen/classes/BuffetItemTypes.dart';
 import 'package:on_canteen/classes/BuffetItems.dart';
 import 'package:on_canteen/classes/Institution.dart';
+import 'package:on_canteen/classes/QAClass.dart';
 import 'package:on_canteen/classes/dateClass.dart';
 import 'package:on_canteen/classes/dietolog.dart';
 import 'package:on_canteen/classes/food.dart';
@@ -529,5 +530,32 @@ class IngredientsGetter {
       String source = Utf8Decoder().convert(response.bodyBytes);
       return jsonDecode(source);
     }
+  }
+}
+
+Future<List<QAClass>> fetchQAs(BuildContext context) async {
+  final response = await http.get(root + 'api/getQuestions/');
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 201 ||
+      response.statusCode == 202) {
+    String source = Utf8Decoder().convert(response.bodyBytes);
+    var jsonData = jsonDecode(source);
+    List QAsList = jsonData['data'];
+    List<QAClass> QAs = [];
+    for (var QA in QAsList) {
+      QAClass s = QAClass(
+        questionId: QA['id'],
+        answerId: QA['answers'].length > 0 ? QA['answers'][0]['id'] : null,
+        name: QA['name'],
+        answer: QA['answers'].length > 0 ? QA['answers'][0]['answer'] : '',
+        phoneNum: QA['phone_number'],
+        question: QA['question'],
+      );
+      QAs.add(s);
+    }
+    return QAs;
+  } else {
+    throw Exception('QAs ' + response.statusCode.toString());
   }
 }
